@@ -1,0 +1,9 @@
+.catalog-card {
+  max-width: 800px;
+}
+
+.products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
