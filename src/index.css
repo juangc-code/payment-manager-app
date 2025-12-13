@@ -9,13 +9,24 @@
   line-height: 1.5;
   font-weight: 400;
 
-  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --primary-color: #667eea;
-  --primary-dark: #764ba2;
-  --text-color: #333;
-  --text-light: #666;
-  --border-color: #ddd;
-  --bg-light: #f8f9fa;
+  /* Telegram theme variables - will be overridden by JS */
+  --tg-theme-bg-color: #ffffff;
+  --tg-theme-text-color: #000000;
+  --tg-theme-hint-color: #999999;
+  --tg-theme-link-color: #2481cc;
+  --tg-theme-button-color: #2481cc;
+  --tg-theme-button-text-color: #ffffff;
+  --tg-theme-secondary-bg-color: #f1f1f1;
+
+  /* App theme variables using Telegram colors */
+  --primary-gradient: linear-gradient(135deg, var(--tg-theme-button-color) 0%, var(--tg-theme-link-color) 100%);
+  --primary-color: var(--tg-theme-button-color);
+  --primary-dark: var(--tg-theme-link-color);
+  --text-color: var(--tg-theme-text-color);
+  --text-light: var(--tg-theme-hint-color);
+  --border-color: var(--tg-theme-secondary-bg-color);
+  --bg-light: var(--tg-theme-secondary-bg-color);
+  --bg-color: var(--tg-theme-bg-color);
   --success-color: #28a745;
   --danger-color: #dc3545;
 
@@ -29,8 +40,10 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: var(--primary-gradient);
+  background: var(--bg-color);
   color: var(--text-color);
+  /* Prevent pull-to-refresh on mobile */
+  overscroll-behavior-y: contain;
 }
 
 #root {
