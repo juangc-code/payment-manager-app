@@ -7,12 +7,14 @@ import LoginPage from "../pages/login/LoginPage";
 import StoreLandingPage from "../pages/landing/StoreLandingPage";
 import ProductManagementPage from "../pages/product-management/ProductManagementPage";
 import ProtectedRoute from "../components/ProtectedRoute";
+import TelegramNavigationHandler from "../components/TelegramNavigationHandler";
 import { StoreProvider } from "../context/StoreProvider";
 import { ProductProvider } from "../context/ProductProvider";
 
 export default function Router() {
   return (
     <BrowserRouter>
+      <TelegramNavigationHandler />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
 

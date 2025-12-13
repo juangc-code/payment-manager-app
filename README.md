@@ -1,16 +1,99 @@
-# React + Vite
+# Telegram E-Commerce App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A fully-featured e-commerce application built as a Telegram Mini App, providing a native experience within the Telegram messenger on Android and iOS.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Telegram Mini App Integration**: Native Telegram experience with theme adaptation, navigation, and haptic feedback
+- **Multi-Store Support**: Support for multiple stores with dynamic routing
+- **Product Catalog**: Browse and search products
+- **Shopping Cart & Checkout**: Complete checkout flow with payment integration
+- **Lemon Cash Integration**: Cryptocurrency payments via Lemon Cash SDK
+- **Product Management**: Admin interface for managing products
+- **User Authentication**: Secure authentication flow
+- **Responsive Design**: Optimized for mobile devices
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React 19** - UI framework
+- **Vite** - Build tool and dev server
+- **React Router** - Client-side routing
+- **@tma.js/sdk-react** - Telegram Mini Apps SDK
+- **@lemoncash/mini-app-sdk** - Lemon Cash payment integration
+- **Axios** - HTTP client
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
+
+- Node.js 16+ and npm
+- A Telegram Bot (create one with [@BotFather](https://t.me/botfather))
+
+### Installation
+
+```bash
+npm install
+```
+
+### Development
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+The built files will be in the `dist` directory.
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+## Telegram Mini App Setup
+
+This app is fully integrated with Telegram Mini Apps. See [TELEGRAM_INTEGRATION.md](./TELEGRAM_INTEGRATION.md) for detailed documentation on:
+
+- How to set up your Telegram Bot
+- Using Telegram SDK features (back button, main button, haptic feedback, etc.)
+- Theme integration and platform compatibility
+- Development and testing workflow
+
+### Quick Start for Telegram
+
+1. Build your app: `npm run build`
+2. Deploy to a public URL (Vercel, Netlify, GitHub Pages, etc.)
+3. Create a bot with [@BotFather](https://t.me/botfather)
+4. Use `/newapp` or `/editapp` to set your Mini App URL
+5. Open your bot and launch the Mini App
+
+## Project Structure
+
+```
+src/
+├── components/        # Reusable UI components
+├── context/          # React context providers
+├── pages/            # Page components
+├── routes/           # Routing configuration
+└── services/         # API and business logic services
+```
+
+## Platform Compatibility
+
+- ✅ Telegram for Android
+- ✅ Telegram for iOS
+- ✅ Telegram Desktop
+- ✅ Telegram Web
+- ✅ Telegram for macOS
+- ✅ Regular web browsers (with feature fallbacks)
+
+## License
+
+MIT
