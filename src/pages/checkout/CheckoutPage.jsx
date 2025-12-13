@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../../context/AppProvider";
 import { useStore } from "../../context/StoreProvider";
-import { useTelegram } from "../../context/TelegramProvider";
 import { lemonAuth, lemonDeposit } from "../../services/LemonService";
 import { convertToCrypto } from "../../services/ConversionService";
 import UserMenu from "../../components/UserMenu";
@@ -12,7 +11,6 @@ export default function CheckoutPage() {
   const navigate = useNavigate();
   const { product, amount, setTxResult } = useApp();
   const { storeSlug } = useStore();
-  const telegram = useTelegram();
   const [isProcessing, setIsProcessing] = useState(false);
 
   if (!product) {
@@ -31,40 +29,19 @@ export default function CheckoutPage() {
     );
   }
 
-  useEffect(() => {
-    // Set up Telegram main button for payment
-    if (product && !isProcessing) {
-      const isVariablePrice = product.productType === 'VARIABLE_PRICE' || product.requiresAmount;
-      const totalAmount = isVariablePrice ? amount : product.price;
-
-      telegram.mainButton.show(`Pay ${product.currencyCode || 'ARS'} ${totalAmount}`, handlePay);
-      telegram.mainButton.enable();
-    }
-
-    return () => {
-      telegram.mainButton.hide();
-    };
-  }, [product, amount, isProcessing]);
-
   const handlePay = async () => {
     setIsProcessing(true);
-    telegram.mainButton.disable();
-    telegram.hapticFeedback("impact", "medium");
-
     try {
       const auth = await lemonAuth();
       const cryptoAmount = await convertToCrypto(amount);
       const result = await lemonDeposit(cryptoAmount);
 
-      telegram.hapticFeedback("notification", "success");
       setTxResult(result);
       navigate(`/${storeSlug}/status`);
     } catch (error) {
       console.error("Payment failed:", error);
-      telegram.hapticFeedback("notification", "error");
-      telegram.showAlert("Payment failed. Please try again.");
+      alert("Payment failed. Please try again.");
       setIsProcessing(false);
-      telegram.mainButton.enable();
     }
   };
 
@@ -121,17 +98,13 @@ export default function CheckoutPage() {
             >
               Back
             </button>
-            {/* Payment button is now handled by Telegram main button */}
-            {/* For web fallback, show traditional button */}
-            {!telegram.isReady && (
-              <button
-                className="btn-primary"
-                onClick={handlePay}
-                disabled={isProcessing}
-              >
-                {isProcessing ? "Processing..." : "Pay with Lemon"}
-              </button>
-            )}
+            <button
+              className="btn-primary"
+              onClick={handlePay}
+              disabled={isProcessing}
+            >
+              {isProcessing ? "Processing..." : "Pay with Lemon"}
+            </button>
           </div>
         </div>
       </div>
