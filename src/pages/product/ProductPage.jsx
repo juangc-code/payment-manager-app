@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import products from "../../data/products";
 import { useApp } from "../../context/AppProvider";
+import { useStore } from "../../context/StoreProvider";
 import AmountInput from "../../components/AmountInput";
 import UserMenu from "../../components/UserMenu";
 import "./ProductPage.css";
@@ -9,6 +10,7 @@ export default function ProductPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { product, amount, setAmount } = useApp();
+  const { storeSlug } = useStore();
 
   const selected = product ?? products.find(p => p.id === id);
 
@@ -19,7 +21,7 @@ export default function ProductPage() {
         <div className="page-container">
           <div className="page-card">
             <p className="error-message">Product not found</p>
-            <button className="btn-secondary" onClick={() => navigate("/")}>
+            <button className="btn-secondary" onClick={() => navigate(`/${storeSlug}/catalog`)}>
               Back to Store
             </button>
           </div>
@@ -28,16 +30,26 @@ export default function ProductPage() {
     );
   }
 
+  const isVariablePrice = selected.productType === 'VARIABLE_PRICE' || selected.requiresAmount;
+  const minPrice = selected.minPrice || 0;
+
   const handleContinue = () => {
-    if (selected.requiresAmount && (!amount || Number(amount) <= 0)) {
-      alert("Please enter a valid amount");
-      return;
+    if (isVariablePrice) {
+      const amountValue = Number(amount);
+      if (!amount || amountValue <= 0) {
+        alert("Please enter a valid amount");
+        return;
+      }
+      if (minPrice > 0 && amountValue < minPrice) {
+        alert(`Minimum amount is ${selected.currencyCode || 'ARS'} ${minPrice}`);
+        return;
+      }
     }
-    navigate("/checkout");
+    navigate(`/${storeSlug}/checkout`);
   };
 
   const handleBack = () => {
-    navigate("/");
+    navigate(`/${storeSlug}/catalog`);
   };
 
   return (
@@ -51,16 +63,27 @@ export default function ProductPage() {
           </div>
 
           <div className="product-details">
-            {typeof selected.price !== 'undefined' && !selected.requiresAmount && (
+            {typeof selected.price !== 'undefined' && !isVariablePrice && (
               <div className="detail-row">
                 <span className="detail-label">Price:</span>
-                <span className="detail-value">${selected.price}</span>
+                <span className="detail-value">{selected.currencyCode || 'ARS'} {selected.price}</span>
               </div>
             )}
 
-            {selected.requiresAmount && (
+            {isVariablePrice && (
               <div className="amount-section">
-                <AmountInput value={amount} onChange={setAmount} />
+                <AmountInput
+                  value={amount}
+                  onChange={setAmount}
+                  min={minPrice}
+                  placeholder={selected.suggestedPrice ? `Suggested: ${selected.suggestedPrice}` : '$'}
+                />
+                {minPrice > 0 && (
+                  <p className="price-hint">Minimum: {selected.currencyCode || 'ARS'} {minPrice}</p>
+                )}
+                {selected.suggestedPrice && (
+                  <p className="price-hint">Suggested: {selected.currencyCode || 'ARS'} {selected.suggestedPrice}</p>
+                )}
               </div>
             )}
           </div>

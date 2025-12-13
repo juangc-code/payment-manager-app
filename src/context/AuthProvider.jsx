@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import AuthService from "../services/AuthService";
 
 const AuthContext = createContext();
 
@@ -8,39 +9,47 @@ export const AuthProvider = ({ children }) => {
 
   // Load user from localStorage on mount
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = AuthService.getStoredUser();
     if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error("Failed to parse stored user:", error);
-        localStorage.removeItem("user");
-      }
+      setUser(storedUser);
     }
     setIsLoading(false);
   }, []);
 
-  const login = (username, password) => {
-    // Simple login validation (replace with actual API call)
-    if (username && password) {
-      const userData = {
-        username,
-        loginTime: new Date().toISOString(),
-      };
-      setUser(userData);
-      localStorage.setItem("user", JSON.stringify(userData));
-      return true;
+  const login = async (loginRequest) => {
+    try {
+      const response = await AuthService.login(loginRequest);
+      if (response.data.user) {
+        setUser(response.data.user);
+      }
+      return response;
+    } catch (error) {
+      console.error("Login failed:", error);
+      throw error;
     }
-    return false;
   };
 
   const logout = () => {
+    AuthService.logout();
     setUser(null);
-    localStorage.removeItem("user");
   };
 
   const isAuthenticated = () => {
-    return user !== null;
+    return AuthService.isAuthenticated();
+  };
+
+  const getCurrentUser = async () => {
+    try {
+      const response = await AuthService.getCurrentUser();
+      if (response.data) {
+        setUser(response.data);
+        localStorage.setItem("user", JSON.stringify(response.data));
+      }
+      return response;
+    } catch (error) {
+      console.error("Failed to get current user:", error);
+      throw error;
+    }
   };
 
   return (
@@ -51,6 +60,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         isAuthenticated,
+        getCurrentUser,
       }}
     >
       {children}

@@ -4,43 +4,70 @@ import ProductPage from "../pages/product/ProductPage";
 import CheckoutPage from "../pages/checkout/CheckoutPage";
 import PaymentStatusPage from "../pages/payment/PaymentStatusPage";
 import LoginPage from "../pages/login/LoginPage";
+import StoreLandingPage from "../pages/landing/StoreLandingPage";
+import ProductManagementPage from "../pages/product-management/ProductManagementPage";
 import ProtectedRoute from "../components/ProtectedRoute";
+import { StoreProvider } from "../context/StoreProvider";
+import { ProductProvider } from "../context/ProductProvider";
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+
+        {/* Store-specific routes with dynamic slug */}
+        <Route path="/:storeSlug" element={<StoreProvider><StoreLandingPage /></StoreProvider>} />
         <Route
-          path="/"
+          path="/:storeSlug/catalog"
           element={
-            <ProtectedRoute>
-              <CatalogPage />
-            </ProtectedRoute>
+            <StoreProvider>
+              <ProductProvider>
+                <ProtectedRoute>
+                  <CatalogPage />
+                </ProtectedRoute>
+              </ProductProvider>
+            </StoreProvider>
           }
         />
         <Route
-          path="/product/:id"
+          path="/:storeSlug/manage-products"
           element={
-            <ProtectedRoute>
-              <ProductPage />
-            </ProtectedRoute>
+            <StoreProvider>
+              <ProtectedRoute>
+                <ProductManagementPage />
+              </ProtectedRoute>
+            </StoreProvider>
           }
         />
         <Route
-          path="/checkout"
+          path="/:storeSlug/product/:id"
           element={
-            <ProtectedRoute>
-              <CheckoutPage />
-            </ProtectedRoute>
+            <StoreProvider>
+              <ProtectedRoute>
+                <ProductPage />
+              </ProtectedRoute>
+            </StoreProvider>
           }
         />
         <Route
-          path="/status"
+          path="/:storeSlug/checkout"
           element={
-            <ProtectedRoute>
-              <PaymentStatusPage />
-            </ProtectedRoute>
+            <StoreProvider>
+              <ProtectedRoute>
+                <CheckoutPage />
+              </ProtectedRoute>
+            </StoreProvider>
+          }
+        />
+        <Route
+          path="/:storeSlug/status"
+          element={
+            <StoreProvider>
+              <ProtectedRoute>
+                <PaymentStatusPage />
+              </ProtectedRoute>
+            </StoreProvider>
           }
         />
       </Routes>
