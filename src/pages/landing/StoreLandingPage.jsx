@@ -1,10 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../context/StoreProvider';
+import { useRawInitData } from '@tma.js/sdk-react';
 import './StoreLandingPage.css';
 
 const StoreLandingPage = () => {
   const navigate = useNavigate();
+  localStorage.setItem('tma', useRawInitData);
   const { store, isLoading, error, storeSlug } = useStore();
+  localStorage.setItem('store', storeSlug);  
 
   if (isLoading) {
     return (
