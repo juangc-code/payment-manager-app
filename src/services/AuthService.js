@@ -22,7 +22,11 @@ class AuthService {
   }
 
   getStoredToken() {
-    return localStorage.getItem('token');
+    return localStorage.getItem('token') ;
+  }
+
+  getStoredTma() {
+    return localStorage.getItem('tma');
   }
 
   getStoredUser() {
@@ -31,7 +35,7 @@ class AuthService {
   }
 
   isAuthenticated() {
-    return !!this.getStoredToken();
+    return !!this.getStoredToken() || !!this.getStoredTma();
   }
 }
 
