@@ -100,7 +100,8 @@ export default function CheckoutPage() {
             </button>
             <button
               className="btn-primary"
-              onClick={handlePay}
+              // onClick={handlePay}
+              onClick={() => window.location.href = 'lemoncash://app'}
               disabled={isProcessing}
             >
               {isProcessing ? "Processing..." : "Pay with Lemon"}
